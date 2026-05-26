@@ -2,7 +2,7 @@
 
 A fully autonomous AI research system that **searches, reads, writes, and critiques** on its own. Instead of a single AI answering from memory, a team of specialised agents collaborate to produce a structured, sourced research report on any topic.
 
-Built with **LangChain LCEL · OpenAI GPT-4o-mini · Tavily Search API · BeautifulSoup4**
+Built with **LangChain LCEL · Groq (Llama 3.3 70B) · Tavily Search API · BeautifulSoup4**
 
 ---
 
@@ -35,9 +35,9 @@ LangChain LCEL Orchestrator
     │
     ├──▶ Reader Agent  (BeautifulSoup4)     → scraped content
     │
-    ├──▶ Writer Chain  (GPT-4o-mini)        → markdown draft
+    ├──▶ Writer Chain  (Groq Llama 3.3 70B)  → markdown draft
     │
-    └──▶ Critic Chain  (GPT-4o-mini)        → score + feedback
+    └──▶ Critic Chain  (Groq Llama 3.3 70B)  → score + feedback
               │
               └── if REVISE → Writer Chain loops (max 2x)
                   if APPROVE → Final Report
@@ -62,7 +62,7 @@ multi-agent-research/
 ├── pipeline.py              # Orchestrator — chains all agents
 ├── app.py                   # Streamlit frontend
 │
-├── .env                     # API keys (never commit this)
+├── .env                     # API keys
 ├── .gitignore
 ├── requirements.txt
 └── README.md
@@ -76,7 +76,7 @@ multi-agent-research/
 |---|---|---|
 | Search | Tavily API | Live web search, clean results for LLMs |
 | Scraping | BeautifulSoup4 + requests | Extract body text from URLs |
-| LLM | OpenAI GPT-4o-mini | Writer and Critic agents |
+| LLM | Groq API (Llama 3.3 70B) | Writer and Critic agents — free tier, no credit card |
 | Orchestration | LangChain LCEL | Chain agents, route shared state |
 | Frontend | Streamlit | Interactive demo UI |
 | Config | python-dotenv | Manage API keys via `.env` |
@@ -117,12 +117,12 @@ pip install -r requirements.txt
 Create a `.env` file in the root directory:
 
 ```env
-OPENAI_API_KEY=sk-...
+GROQ_API_KEY=gsk_...
 TAVILY_API_KEY=tvly-...
 ```
 
 Get your keys here:
-- **OpenAI** → https://platform.openai.com/api-keys
+- **Groq** → https://console.groq.com (free tier)
 - **Tavily** → https://app.tavily.com (free tier)
 
 ### 5. Run
@@ -220,7 +220,7 @@ VERDICT: APPROVE
 | Scraping fragility | JavaScript-rendered pages (React/Next.js) may return empty content |
 | No persistent memory | State is lost between sessions — each run starts fresh |
 | Writer can hallucinate | Critic checks quality, not factual accuracy against sources |
-| Free tier limits | Tavily: 1,000 searches/month · OpenAI: usage-based billing |
+| Free tier limits | Tavily: 1,000 searches/month · Groq: 100,000 tokens/day |
 
 ---
 
@@ -228,7 +228,7 @@ VERDICT: APPROVE
 
 | Variable | Required | Description |
 |---|---|---|
-| `OPENAI_API_KEY` | ✅ Yes | OpenAI API key for GPT-4o-mini |
+| `GROQ_API_KEY` | ✅ Yes | Groq API key — free at console.groq.com |
 | `TAVILY_API_KEY` | ✅ Yes | Tavily search API key |
 
 ---
@@ -241,10 +241,11 @@ VERDICT: APPROVE
 Key packages:
 ```
 langchain==1.3.1
-langchain-openai==1.2.2
-openai==2.38.0
+langchain-groq==0.3.2
+groq==0.28.0
 tavily-python==0.7.24
 beautifulsoup4==4.12.3
 streamlit==1.57.0
 ```
+
 ---
