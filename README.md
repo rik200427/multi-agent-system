@@ -89,7 +89,7 @@ multi-agent-research/
 ### 1. Clone the repository
 
 ```bash
-git clone https://github.com/your-username/multi-agent-research.git
+git clone https://github.com/rik200427/multi-agent-research.git
 cd multi-agent-research
 ```
 
